@@ -23,6 +23,7 @@ void setup() {
   // inicialización de pines sensores ópticos
   pinMode(Photo_Left_pin, INPUT);
   pinMode(Photo_Right_pin, INPUT);
+  pinMode(STBY_pin, OUTPUT);
   
   digitalWrite(STBY_pin , 1);      // habilitación de motores
 
@@ -44,7 +45,7 @@ void sigueLinea(){
     case 2:   //    giro a la derecha
       left();
       break;
-    case 3:
+    case 3: //  se para
       stopMovement();
       break;
   }
@@ -65,47 +66,47 @@ byte asignarState(int left, int right){
 // Funcion de avance del motor
 //-----------------------------
 void goForward() {
-digitalWrite(AIN1_pin, HIGH); // motor derecho
-digitalWrite(AIN2_pin, LOW);   
-digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
-digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(AIN1_pin, HIGH); // motor derecho
+  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
+  digitalWrite(BIN2_pin, LOW);      
 } // ---------------------------
 
 void stopMovement(){
   digitalWrite(AIN1_pin, LOW); // motor derecho
-digitalWrite(AIN2_pin, LOW);   
-digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-digitalWrite(BIN2_pin, LOW); 
+  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
+  digitalWrite(BIN2_pin, LOW); 
 }
 
 //-----------------------------
 // Funcion de atras del motor
 //-----------------------------
 void goBackwards() {
-digitalWrite(AIN1_pin, LOW); // motor derecho
-digitalWrite(AIN2_pin, HIGH);   
-digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-digitalWrite(BIN2_pin, HIGH);      
+  digitalWrite(AIN1_pin, LOW); // motor derecho
+  digitalWrite(AIN2_pin, HIGH);   
+  digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
+  digitalWrite(BIN2_pin, HIGH);      
 } // ---------------------------
 
 //-----------------------------
 // Funcion de girar izquierda del motor
 //-----------------------------
 void left() {
-digitalWrite(AIN1_pin, HIGH); // motor derecho
-digitalWrite(AIN2_pin, LOW);   
-digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(AIN1_pin, HIGH); // motor derecho
+  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
+  digitalWrite(BIN2_pin, LOW);      
 } // ---------------------------
 
 //-----------------------------
 // Funcion de girar derecha del motor
 //-----------------------------
 void right() {
-digitalWrite(AIN1_pin, LOW); // motor derecho
-digitalWrite(AIN2_pin, LOW);   
-digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
-digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(AIN1_pin, LOW); // motor derecho
+  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
+  digitalWrite(BIN2_pin, LOW);      
 } // ---------------------------
 
 
@@ -121,14 +122,14 @@ analogWrite(PWMB_pin, velocity);
 void loop() {
   // test de movimentos del robot: avance, atras, giros
 // ---------------------------------------------------
-//  goForward();
-//  delay(2000); 
-//  goBackwards();
-//  delay(2000);
-//  right();
-//  delay(1000);
-//  left();
-//  delay(1000);
+  //goForward();
+  //delay(2000); 
+  //goBackwards();
+  //delay(2000);
+  //right();
+  //delay(1000);
+  //left();
+  //delay(1000);
   //digitalWrite(STBY_pin , 0);      // deshabilitación de motores
 
   sigueLinea();
