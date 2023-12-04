@@ -12,6 +12,9 @@
 #define Photo_Left_pin  A0 //   pin del Arduino conectado al sensor óptico Izquierdo
 #define Photo_Right_pin A1 //   pin del Arduino conectado al sensor óptico Derecho
 
+int Photo_Left = 0;
+int Photo_Right = 0;
+
 void setup() {
   Serial.begin(9600);
   // inicialización de los pines de control del motor
@@ -19,46 +22,56 @@ void setup() {
   pinMode(AIN2_pin, OUTPUT);
   pinMode(BIN1_pin, OUTPUT);
   pinMode(BIN2_pin, OUTPUT);
-  
+
   // inicialización de pines sensores ópticos
   pinMode(Photo_Left_pin, INPUT);
   pinMode(Photo_Right_pin, INPUT);
   pinMode(STBY_pin, OUTPUT);
-  
-  digitalWrite(STBY_pin , 1);      // habilitación de motores
 
-  set_velocity(120);             // fija una velocidad 
+  digitalWrite(STBY_pin , 1);      // habilitación de motores
+  delay(200);
+  set_velocity(90);             // fija una velocidad 90
 
 }
 
-void sigueLinea(){
-  int leftP = analogRead(Photo_Left_pin);
-  int rightP = analogRead(Photo_Right_pin);
-  byte state = asignarState(leftP, rightP);//estado del robot
-  switch(state){
+void sigueLinea() {
+  Photo_Left = analogRead(Photo_Left_pin);
+  Photo_Right = analogRead(Photo_Right_pin);
+  //Serial.print("Left: ");
+  //Serial.println(Photo_Left);
+  //Serial.print("Right: ");
+  //Serial.println(Photo_Right);
+  int state = asignarState(Photo_Left, Photo_Right);//estado del robot
+  //Serial.println("State: " + state);
+  switch (state) {
     case 0:   //   avance
       goForward();
+      delay(10);
       break;
-    case 1:   //   giro a la izquierda 
+    case 1:   //   giro a la izquierda
       right();
+      delay(10);
       break;
     case 2:   //    giro a la derecha
       left();
+      delay(10);
       break;
-    case 3: //  se para
+    case -1: //  se para
+    default:
       stopMovement();
       break;
   }
 }
 
-byte asignarState(int left, int right){
-  if(left < 200 && right < 200){
-      return 0;
-  }else if(left >= 200 && right < 200){
-      return 1;
-  }else if(left < 200 && right >= 200){
+int asignarState(int left, int right) {
+  if (left < 150 && right < 150) {
+    return 0;
+  } else if (left >= 150 && right < 150) {
+    return 1;
+  } else if (left < 150 && right >= 150) {
     return 2;
   }
+  return -1;
 }
 
 
@@ -67,16 +80,17 @@ byte asignarState(int left, int right){
 //-----------------------------
 void goForward() {
   digitalWrite(AIN1_pin, HIGH); // motor derecho
-  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(AIN2_pin, LOW);
   digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
-  digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(BIN2_pin, LOW);
+
 } // ---------------------------
 
-void stopMovement(){
+void stopMovement() {
   digitalWrite(AIN1_pin, LOW); // motor derecho
-  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(AIN2_pin, LOW);
   digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-  digitalWrite(BIN2_pin, LOW); 
+  digitalWrite(BIN2_pin, LOW);
 }
 
 //-----------------------------
@@ -84,9 +98,9 @@ void stopMovement(){
 //-----------------------------
 void goBackwards() {
   digitalWrite(AIN1_pin, LOW); // motor derecho
-  digitalWrite(AIN2_pin, HIGH);   
+  digitalWrite(AIN2_pin, HIGH);
   digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-  digitalWrite(BIN2_pin, HIGH);      
+  digitalWrite(BIN2_pin, HIGH);
 } // ---------------------------
 
 //-----------------------------
@@ -94,9 +108,9 @@ void goBackwards() {
 //-----------------------------
 void left() {
   digitalWrite(AIN1_pin, HIGH); // motor derecho
-  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(AIN2_pin, LOW);
   digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
-  digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(BIN2_pin, LOW);
 } // ---------------------------
 
 //-----------------------------
@@ -104,9 +118,9 @@ void left() {
 //-----------------------------
 void right() {
   digitalWrite(AIN1_pin, LOW); // motor derecho
-  digitalWrite(AIN2_pin, LOW);   
+  digitalWrite(AIN2_pin, LOW);
   digitalWrite(BIN1_pin, HIGH); // mmotor izquierdo
-  digitalWrite(BIN2_pin, LOW);      
+  digitalWrite(BIN2_pin, LOW);
 } // ---------------------------
 
 
@@ -115,15 +129,15 @@ void right() {
 // Función que fija la velocidad del robot
 //-----------------------------------------
 void set_velocity (byte velocity) {
-analogWrite(PWMA_pin, velocity);
-analogWrite(PWMB_pin, velocity);
-}   
+  analogWrite(PWMA_pin, velocity);
+  analogWrite(PWMB_pin, velocity);
+}
 
 void loop() {
   // test de movimentos del robot: avance, atras, giros
-// ---------------------------------------------------
+  // ---------------------------------------------------
   //goForward();
-  //delay(2000); 
+  //delay(2000);
   //goBackwards();
   //delay(2000);
   //right();
@@ -133,4 +147,11 @@ void loop() {
   //digitalWrite(STBY_pin , 0);      // deshabilitación de motores
 
   sigueLinea();
+//  Photo_Left = analogRead(Photo_Left_pin);
+//  Photo_Right = analogRead(Photo_Right_pin);
+//  Serial.print("Left: ");
+//  Serial.println(Photo_Left);
+//  Serial.print("Right: ");
+//  Serial.println(Photo_Right);
+//  delay(1000);
 }
