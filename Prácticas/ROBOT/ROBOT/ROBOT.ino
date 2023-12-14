@@ -15,6 +15,9 @@
 int Photo_Left = 0;
 int Photo_Right = 0;
 
+//ESPIRAL
+int contEspiral = 60;
+
 void setup() {
   Serial.begin(9600);
   // inicialización de los pines de control del motor
@@ -30,7 +33,7 @@ void setup() {
 
   digitalWrite(STBY_pin , 1);      // habilitación de motores
   delay(200);
-  set_velocity(90);             // fija una velocidad 90
+  set_velocity(90, 90);             // fija una velocidad 90
 
 }
 
@@ -43,6 +46,8 @@ void sigueLinea() {
   //Serial.println(Photo_Right);
   int state = asignarState(Photo_Left, Photo_Right);//estado del robot
   //Serial.println("State: " + state);
+  set_velocity(90, 90);
+  delay(10);
   switch (state) {
     case 0:   //   avance
       goForward();
@@ -58,7 +63,11 @@ void sigueLinea() {
       break;
     case -1: //  se para
     default:
-      stopMovement();
+      goBackwards();
+      delay(10);
+      //contEspiral += 1;
+      //stopMovement();
+      //detectarLinea();
       break;
   }
 }
@@ -93,10 +102,15 @@ void stopMovement() {
   digitalWrite(BIN2_pin, LOW);
 }
 
+void detectarLinea(){
+  set_velocity(80, contEspiral); 
+}
+
 //-----------------------------
 // Funcion de atras del motor
 //-----------------------------
 void goBackwards() {
+  set_velocity(60,60);
   digitalWrite(AIN1_pin, LOW); // motor derecho
   digitalWrite(AIN2_pin, HIGH);
   digitalWrite(BIN1_pin, LOW); // mmotor izquierdo
@@ -128,9 +142,9 @@ void right() {
 //----------------------------------------
 // Función que fija la velocidad del robot
 //-----------------------------------------
-void set_velocity (byte velocity) {
+void set_velocity (byte velocity, byte velocity2) {
   analogWrite(PWMA_pin, velocity);
-  analogWrite(PWMB_pin, velocity);
+  analogWrite(PWMB_pin, velocity2);
 }
 
 void loop() {
