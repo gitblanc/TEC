@@ -65,9 +65,7 @@ void sigueLinea() {
     default:
       goBackwards();
       delay(10);
-      //contEspiral += 1;
       //stopMovement();
-      //detectarLinea();
       break;
   }
 }
